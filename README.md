@@ -105,8 +105,6 @@ Ganti dengan API Key baru dari: https://aistudio.google.com/
 python app.py
 ```
 
-Notes : Di dalam Codespaces di repositori ini, cukup langsung menjalankan python app.py.
-
 ### 6. Buka di Browser / HP Android
 - **Laptop:** `http://localhost:5000`
 - **HP Android (WiFi sama):**
