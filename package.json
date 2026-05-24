@@ -1,0 +1,17 @@
+{
+  "name": "nutrimind-v2",
+  "version": "1.0.0",
+  "description": "> Mini Competition (Minicomp) GDGoC Universitas Esa Unggul > Tema: \"Build Impactful Solutions with Artificial Intelligence\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.3.0",
+    "tailwindcss": "^4.3.0"
+  }
+}

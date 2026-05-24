@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="theme-color" content="#172029" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="description"
+      content="NutriMind — AI Food Journal & Wellness Tracker"
+    />
+    <title>NutriMind</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/output.css" />
+    <link rel="stylesheet" href="/static/css/main.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar" role="banner">
+        <div class="topbar-brand">
+          <div class="brand-mark" aria-hidden="true">🥗</div>
+          <div>
+            <div class="brand-name">NutriMind</div>
+            <div class="brand-tag">AI Wellness Tracker</div>
+          </div>
+        </div>
+        <div class="streak-pill" aria-label="Streak harian">
+          🔥 <span id="streak-num">1</span> hari
+        </div>
+      </header>
+
+      <div
+        class="step-bar"
+        role="progressbar"
+        aria-label="Langkah pengisian jurnal"
+        id="step-bar"
+      >
+        <div class="step-dot active" id="sdot-1"></div>
+        <div class="step-line">
+          <div class="step-line-fill" id="sline-1"></div>
+        </div>
+        <div class="step-dot" id="sdot-2"></div>
+        <div class="step-line">
+          <div class="step-line-fill" id="sline-2"></div>
+        </div>
+        <div class="step-dot" id="sdot-3"></div>
+        <span class="step-label" id="step-label">Langkah 1 dari 3</span>
+      </div>
+
+      <section
+        id="screen-mood"
+        class="screen active"
+        aria-label="Pilih suasana hati"
+      >
+        <div class="pad">
+          <h1 class="section-head" id="greeting-text">Hei, selamat pagi! 👋</h1>
+          <p class="section-sub">
+            Mulai dari yang paling penting — bagaimana perasaanmu sekarang?
+          </p>
+
+          <div class="mood-grid" role="group" aria-label="Pilihan suasana hati">
+            <button
+              class="mood-card"
+              onclick="selectMood(this, 'sangat baik')"
+              type="button"
+              aria-label="Sangat baik"
+            >
+              <span class="mood-emoji">😄</span>
+              <span class="mood-word">Sangat<br />baik</span>
+            </button>
+            <button
+              class="mood-card"
+              onclick="selectMood(this, 'baik')"
+              type="button"
+              aria-label="Baik"
+            >
+              <span class="mood-emoji">😊</span>
+              <span class="mood-word">Baik</span>
+            </button>
+            <button
+              class="mood-card"
+              onclick="selectMood(this, 'biasa saja')"
+              type="button"
+              aria-label="Biasa"
+            >
+              <span class="mood-emoji">😐</span>
+              <span class="mood-word">Biasa</span>
+            </button>
+            <button
+              class="mood-card"
+              onclick="selectMood(this, 'kurang baik')"
+              type="button"
+              aria-label="Kurang baik"
+            >
+              <span class="mood-emoji">😔</span>
+              <span class="mood-word">Kurang<br />baik</span>
+            </button>
+          </div>
+
+          <div class="tip-strip">
+            <span class="tip-icon" aria-hidden="true">💡</span>
+            <p class="tip-text">
+              Suasana hati sangat mempengaruhi pilihan makanan. Gemini akan
+              mempertimbangkan ini saat menganalisis nutrisimu.
+            </p>
+          </div>
+
+          <button
+            class="btn-primary"
+            id="btn-next-mood"
+            onclick="goToJournal()"
+            type="button"
+            disabled
+            aria-label="Lanjut ke jurnal makanan"
+          >
+            Lanjutkan →
+          </button>
+        </div>
+      </section>
+
+      <section
+        id="screen-journal"
+        class="screen"
+        aria-label="Tulis jurnal makanan"
+      >
+        <div class="pad">
+          <h2 class="section-head">Ceritakan pola makanmu</h2>
+          <p class="section-sub">
+            Ketik bebas — tidak perlu formal. Cerita apa adanya seperti curhat
+            ke teman.
+          </p>
+
+          <div class="journal-wrap">
+            <div class="journal-label">✍️ Apa yang kamu makan hari ini?</div>
+            <textarea
+              id="journal-input"
+              class="journal-box"
+              placeholder="Contoh: Sarapan skip, siang makan mie instan 2 bungkus sambil minum kopi. Sore kepala agak pusing dan badan lemas banget..."
+              maxlength="1000"
+              oninput="onJournalInput(this)"
+              aria-label="Jurnal makanan dan kondisi tubuh"
+            ></textarea>
+            <span class="char-counter" id="char-counter" aria-live="polite"
+              >0 / 1000</span
+            >
+          </div>
+
+          <p class="chips-label">⚡ Isi cepat — klik untuk pakai:</p>
+          <div class="chips" role="list">
+            <button
+              class="chip"
+              onclick="fillChip(this)"
+              type="button"
+              role="listitem"
+            >
+              Mie instan + kopi, kepala pusing
+            </button>
+            <button
+              class="chip"
+              onclick="fillChip(this)"
+              type="button"
+              role="listitem"
+            >
+              Skip sarapan, nasi goreng siang, lemas
+            </button>
+            <button
+              class="chip"
+              onclick="fillChip(this)"
+              type="button"
+              role="listitem"
+            >
+              Makan sehat tapi perut kembung
+            </button>
+            <button
+              class="chip"
+              onclick="fillChip(this)"
+              type="button"
+              role="listitem"
+            >
+              Banyak minum air, buah, sayur — badan segar
+            </button>
+          </div>
+
+          <button
+            class="btn-primary"
+            id="btn-analyze"
+            onclick="submitJournal()"
+            type="button"
+            disabled
+            aria-label="Analisis jurnal dengan Gemini AI"
+          >
+            🔍 Analisis dengan Gemini AI
+          </button>
+          <button class="btn-ghost" onclick="goBack()" type="button">
+            ← Kembali
+          </button>
+        </div>
+      </section>
+
+      <section
+        id="screen-loading"
+        class="screen"
+        aria-label="Menganalisis jurnal"
+        aria-live="polite"
+      >
+        <div class="loading-center">
+          <div class="pulse-ring" role="status" aria-label="Sedang memproses">
+            <div class="pulse-emoji" aria-hidden="true">🧠</div>
+          </div>
+          <h2 class="loading-title">Sedang menganalisis...</h2>
+          <p class="loading-sub">
+            Gemini membaca pola nutrisimu dan menghubungkan dengan kondisi
+            tubuhmu
+          </p>
+
+          <div class="loading-steps" aria-live="polite" id="loading-steps">
+            <div class="loading-step" id="lstep-1">
+              <div class="loading-step-icon">📖</div>
+              Membaca jurnalmu
+            </div>
+            <div class="loading-step" id="lstep-2">
+              <div class="loading-step-icon">🔬</div>
+              Menganalisis kandungan nutrisi
+            </div>
+            <div class="loading-step" id="lstep-3">
+              <div class="loading-step-icon">💊</div>
+              Mengidentifikasi kekurangan
+            </div>
+            <div class="loading-step" id="lstep-4">
+              <div class="loading-step-icon">🥗</div>
+              Menyiapkan saran & insight
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="screen-result"
+        class="screen"
+        aria-label="Hasil analisis nutrisi"
+        aria-live="polite"
+      >
+        <div id="error-toast" class="error-toast hidden" role="alert">
+          <span class="error-toast-icon" aria-hidden="true">⚠️</span>
+          <p class="error-toast-text" id="error-msg">Terjadi kesalahan.</p>
+        </div>
+
+        <div class="score-hero" id="score-hero">
+          <div class="score-ring-wrap">
+            <div class="score-ring">
+              <span class="score-num" id="res-skor">—</span>
+              <span class="score-100">/100</span>
+            </div>
+          </div>
+          <div class="score-info">
+            <p class="score-label">Skor Nutrisi Hari Ini</p>
+            <p class="score-status" id="res-status">—</p>
+            <p class="score-kalori">Estimasi: <span id="res-kalori">—</span></p>
+          </div>
+        </div>
+
+        <div class="ringkasan-strip" id="ringkasan-strip">
+          <p class="ringkasan-text" id="res-ringkasan">—</p>
+        </div>
+
+        <div class="insight-card" id="insight-card">
+          <p class="card-eyebrow sky">🧠 Insight AI</p>
+          <p class="card-body" id="res-insight">—</p>
+        </div>
+
+        <p class="result-section-label">⚠️ Nutrisi yang perlu diperhatikan</p>
+        <div class="items-wrap" id="res-deficiency"></div>
+
+        <p class="result-section-label">🥦 Saran makanan untuk besok</p>
+        <div class="items-wrap" id="res-foods"></div>
+
+        <div class="motivasi-card" id="motivasi-card">
+          <span class="motivasi-emoji" aria-hidden="true">💪</span>
+          <p class="motivasi-text" id="res-motivasi">—</p>
+        </div>
+
+        <div class="cta-area">
+          <button class="btn-primary" onclick="resetAll()" type="button">
+            ✍️ Catat Hari Baru
+          </button>
+          <button class="btn-share" onclick="shareResult()" type="button">
+            📤 Bagikan Hasil
+          </button>
+        </div>
+
+        <div class="safe-bottom"></div>
+      </section>
+    </div>
+    <script src="/static/js/main.js"></script>
+  </body>
+</html>
