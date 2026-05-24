@@ -10,9 +10,13 @@
 **NutriMind** adalah aplikasi web pencatat makanan harian yang menghubungkan
 nutrisi dengan kondisi fisik dan suasana hati pengguna.
 
+Proyek ini dibangun menggunakan **Google AI Studio** sebagai platform untuk
+mengelola model dan panggilan API Gemini.
+
 Pengguna cukup mengetik secara bebas apa yang mereka makan hari ini dan
-bagaimana kondisi tubuh mereka. **Gemini 1.5 Flash** akan menganalisis pola
-tersebut dan memberikan:
+bagaimana kondisi tubuh mereka. Sistem akan mengirimkan data ke model **Gemini Flash**
+(dapat menggunakan versi terbaru yang tersedia, seperti **Gemini 2.5 Flash**),
+yang kemudian akan menganalisis pola tersebut dan memberikan:
 
 - 📊 Skor nutrisi harian (1–100)
 - ⚠️ Kekurangan nutrisi beserta dampaknya pada tubuh
@@ -28,7 +32,7 @@ tersebut dan memberikan:
 |--------------------|---------------------------------|
 | Python 3.8+        | Runtime backend                 |
 | Flask              | Web framework                   |
-| Gemini 1.5 Flash   | Analisis teks nutrisi (AI)      |
+| Gemini Flash       | Analisis teks nutrisi (AI)      |
 | Tailwind CSS       | Styling responsif               |
 | HTML + CSS + JS    | Frontend UI                     |
 
@@ -54,7 +58,9 @@ nutrimind-v2/
 
 ## 🚀 Cara Menjalankan
 
-### 1. Setup Virtual Environment
+### 1. (Disarankan) Setup Virtual Environment
+
+Langkah ini direkomendasikan untuk menjaga dependensi Python tetap terisolasi, tetapi tidak wajib.
 
 **Windows (CMD):**
 ```cmd
@@ -74,9 +80,11 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
+Jika Anda sudah menggunakan environment Python tersendiri di Codespaces atau mesin lokal, langkah ini bisa dilewati.
+
 ### 2. Install Dependensi Python
 ```bash
-pip install google-generativeai Flask Pillow
+pip install -r requirements.txt
 ```
 
 ### 3. Install Dependensi Node.js (Tailwind CSS)
@@ -97,6 +105,8 @@ Ganti dengan API Key baru dari: https://aistudio.google.com/
 python app.py
 ```
 
+Notes : Di dalam Codespaces di repositori ini, cukup langsung menjalankan python app.py.
+
 ### 6. Buka di Browser / HP Android
 - **Laptop:** `http://localhost:5000`
 - **HP Android (WiFi sama):**
@@ -115,7 +125,7 @@ User ketik jurnal makanan + kondisi tubuh
       Flask app.py
            │
            ▼ Prompt + teks ke Gemini API
-    Gemini 1.5 Flash
+    Gemini Flash (model terbaik/terbaru otomatis)
            │
            ▼ JSON: skor, insight, kekurangan, saran
       Flask → response
