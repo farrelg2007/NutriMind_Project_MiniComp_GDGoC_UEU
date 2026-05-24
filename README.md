@@ -1,0 +1,2 @@
+# NutriMind_Project_MiniComp_GDGoC_UEU
+Submission project
