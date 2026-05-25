@@ -11,7 +11,7 @@ import google.generativeai as genai
 
 app = Flask(__name__)
 
-API_KEY = "AIzaSyBEmbQm6uISrWmGQfPNS5OPD0wJJRyYjxk"
+API_KEY = "API_KEY_HERE"
 genai.configure(api_key=API_KEY)
 
 CACHED_WORKING_MODEL = None
