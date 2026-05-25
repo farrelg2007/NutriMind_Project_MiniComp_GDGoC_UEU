@@ -11,7 +11,7 @@ import google.generativeai as genai
 
 app = Flask(__name__)
 
-API_KEY = "YOUR_GOOGLE_API_KEY_HERE"
+API_KEY = "AIzaSyBEmbQm6uISrWmGQfPNS5OPD0wJJRyYjxk"
 genai.configure(api_key=API_KEY)
 
 CACHED_WORKING_MODEL = None
@@ -80,31 +80,58 @@ def resolve_best_model():
     global CACHED_WORKING_MODEL
     
     if CACHED_WORKING_MODEL:
-        return [CACHED_WORKING_MODEL]
+        try:
+            # Validate cached model is still available and supports generation
+            for m in genai.list_models():
+                clean_name = m.name.replace('models/', '')
+                methods = getattr(m, 'supported_generation_methods', None)
+                if clean_name == CACHED_WORKING_MODEL and methods and 'generateContent' in methods:
+                    return [CACHED_WORKING_MODEL]
+            CACHED_WORKING_MODEL = None
+        except Exception:
+            # If we can't list models, clear cached model to force fallback candidates
+            CACHED_WORKING_MODEL = None
 
-    candidates = ['gemini-1.5-flash', 'gemini-1.5-flash-latest', 'gemini-1.5-flash-8b', 'gemini-1.0-pro']
+    # Prefer a known-working flash model from the user's API key output,
+    # falling back to other recent flash models.
+    candidates = [
+        'gemini-flash-latest',
+        'gemini-3.5-flash',
+        'gemini-3-flash-preview',
+        'gemini-2.5-flash',
+        'flash-preview',
+    ]
     
     try:
         print("[NutriMind Debug]: Memindai model aktif pada API Key Anda...")
         available_models = []
         for m in genai.list_models():
-            if 'generateContent' in m.supported_generation_methods:
+            methods = getattr(m, 'supported_generation_methods', None)
+            if methods and 'generateContent' in methods:
                 clean_name = m.name.replace('models/', '')
                 available_models.append(clean_name)
-        
-        print(f"[NutriMind Debug]: Model yang didukung oleh API Key Anda: {available_models}")
-        
-        prioritized = [m for m in candidates if m in available_models]
+
+        print(f"[NutriMind Debug]: Model yang mendukung generateContent: {available_models}")
+
+        # Prioritize models that include 'flash' or 'preview' in their names
+        prioritized = [m for m in available_models if ('flash' in m or 'preview' in m)]
         for m in available_models:
             if m not in prioritized:
                 prioritized.append(m)
-                
+
         if prioritized:
             return prioritized
     except Exception as e:
         print(f"[NutriMind Debug]: Gagal memindai model secara dinamis ({e}). Menggunakan metode fallback manual.")
-    
-    return candidates
+
+    # Fallback candidates if listing fails or nothing usable found
+    return [
+        'gemini-flash-latest',
+        'gemini-3.5-flash',
+        'gemini-3-flash-preview',
+        'gemini-2.5-flash',
+        'flash-preview',
+    ]
 
 
 @app.route('/')
